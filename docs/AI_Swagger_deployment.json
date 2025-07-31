@@ -1,0 +1,27 @@
+{
+    "1": {"arquivo": "rotas ou view"},
+    "2": {
+    "action": "generate_open_api_yaml",
+    "input_file": "produto_view.py",
+    "output_format": "yaml",
+    "openapi_version": "1.0.0",
+    "api_title": "API de produtos",
+    "api_version": "1.0.0",
+    "api_description": "API para gestão de produtos",
+    "servers": [
+        {
+            "url": "http:localhost:5000",
+            "description": "Servidor backend"
+        }
+    ]
+},
+"3":
+{
+    "execute_ml_json": true,
+    "show_yaml": true,
+    "download_yaml": true,
+    "yaml_filename": "swagger.yaml"
+}
+}
+
+

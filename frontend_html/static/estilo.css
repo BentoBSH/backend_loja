@@ -1,0 +1,46 @@
+/* frontend_html/static/estilo.css */
+
+/* Estilo global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 30px;
+}
+
+/* Título principal */
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+/* Tabela de utilizadores */
+table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Mensagem de vazio */
+p {
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+}

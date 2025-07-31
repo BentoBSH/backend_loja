@@ -1,0 +1,23 @@
+<!-- frontend_html/templates/enviar_email.html -->
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Email</title>
+</head>
+<body>
+  <h1>Formulário de Envio de Email</h1>
+  <form action="/enviar-email" method="POST">
+    <label>Para:</label><br>
+    <input type="email" name="destinatario" required><br><br>
+
+    <label>Assunto:</label><br>
+    <input type="text" name="assunto" required><br><br>
+
+    <label>Mensagem:</label><br>
+    <textarea name="mensagem" rows="5" cols="40" required></textarea><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Flask
+Flask-SQLAlchemy
+flask_bcrypt
+python-dotenv
+PyMySQL
+flask-swagger-ui
+PyJWT
+argon2-cffi
+mysql
+flask-cors
