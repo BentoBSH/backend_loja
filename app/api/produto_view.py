@@ -2,9 +2,21 @@
 
 from flask import Blueprint, request, jsonify, make_response
 from app.controllers.produto_controller import ProdutoController
+from config import Config
 
 # Define o blueprint para rotas da API
 produtos = Blueprint("produtos", __name__)
+
+
+# Função para verificar a API Key enviada no cabeçalho
+def verificar_api_key():
+    chave = request.headers.get("worker-api-key")
+    return chave == Config.API_KEY
+
+def verificar_api_key_super():
+    chave = request.headers.get("super-api-key")
+    return chave == Config.API_KEY
+
 
 # Rota para listar todos os produtos
 @produtos.route("/produtos", methods=["GET"])
@@ -18,6 +30,10 @@ def listar_produtos():
 # Rota para listar todos os produtos com offsest e limit
 @produtos.route("/produtos/offset/<int:offset>/<int:limit>", methods=["GET"])
 def listar_produtos_com_offset(offset, limit):
+    
+    if not verificar_api_key():
+        return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
+
     produtos = ProdutoController.listar_com_offset_limit(myOffset=offset, myLimit=limit)
     return jsonify([
         {"id": p.id, "nome": p.nome, "preco": p.preco} for p in produtos
@@ -61,6 +77,8 @@ def obter_produto(id_produto):
 # Rota para criar um novo Produto  
 @produtos.route("/produtos", methods=["POST"])
 def criar_produto():
+    if not verificar_api_key():
+        return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
     dados = request.get_json()
     nome = dados.get("nome")
     preco = dados.get("preco")
@@ -81,6 +99,9 @@ def criar_produto():
 # Rota para atualizar um produto existente
 @produtos.route("/produtos/<int:id_produto>", methods=["PUT"])
 def atualizar_produto(id_produto):
+    if not verificar_api_key():
+        return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
+
     dados = request.get_json()
     nome = dados.get("nome")
     preco = dados.get("preco")
@@ -100,6 +121,11 @@ def atualizar_produto(id_produto):
 # Rota para apagar um produto
 @produtos.route("/produtos/<int:id_produto>", methods=["DELETE"])
 def apagar_produto(id_produto):
+    
+    if not verificar_api_key():
+        return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
+    if not verificar_api_key_super():
+        return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
     sucesso = ProdutoController.remover(id_produto)
     if sucesso:
         return jsonify({"mensagem": "Produto apagado com sucesso"})

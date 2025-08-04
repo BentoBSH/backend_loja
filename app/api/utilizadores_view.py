@@ -34,16 +34,19 @@ def login_utilizadores():
         # Extrair o token do cabeçalho "Bearer <token>"
             token = cookie_sessao
             decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=['HS256'])
+            decoded_token["exp"] = datetime.now(timezone.utc) + timedelta(hours=168) # atualiza a expiração do Token em horas
+            encoded_token = jwt.encode(decoded_token, Config.SECRET_KEY, 'HS256')
+            
 
             # Cria uma resposta Flask (necessário para adicionar cookies)
             response = make_response(jsonify({'message': 'Acesso concedido', 'user_info': decoded_token}))
             
             response.set_cookie(
                 'cookie_sessao',
-                token,
-                max_age=3600,  # 1 hora
+                encoded_token,
+                max_age=604800,  # 7 dias (em segundo)
                 path='/',
-                secure=False, # Altere para True em produção (HTTPS)
+                secure=True, # Alterar para True em produção (HTTPS)
             )
 
             return response, 200
@@ -76,7 +79,7 @@ def login_utilizadores():
         token_payload = {
             'user_id': u.id,
             'email': email,
-            'exp': datetime.now(timezone.utc) + timedelta(hours=72) # Token expira em horas
+            'exp': datetime.now(timezone.utc) + timedelta(hours=168) # Token expira em horas
         }
         token = jwt.encode(token_payload, Config.SECRET_KEY, algorithm='HS256')
 
