@@ -25,6 +25,20 @@ class UtilizadorController:
         return UtilizadorDAO.obter_por_id(id_utilizador)
 
     @staticmethod
+    def adicionar_no_carrinho(id_utilizador, id_produto, quantidade):
+        """
+        Retorna o produto adicionado ao carrinho pelo utilizador.
+        """
+        return  UtilizadorDAO.adicionar_ao_carrinho(id_utilizador=id_utilizador, id_produto=id_produto, quantidade=quantidade)
+
+    @staticmethod
+    def atualizar_carrinho(id_utilizador, id_produto, nova_quantidade):
+        """
+        Retorna o produto adicionado ao carrinho pelo utilizador.
+        """
+        return  UtilizadorDAO.atualizar_carrinho(id_utilizador=id_utilizador, id_produto=id_produto, nova_quantidade=nova_quantidade)
+
+    @staticmethod
     def obter_via_email(email_utilizador):
         """
         Retorna um único utilizador com base no email.
@@ -66,3 +80,10 @@ class UtilizadorController:
         Elimina um utilizador da base de dados.
         """
         return UtilizadorDAO.apagar(id_utilizador)
+    
+    @staticmethod
+    def remover_do_carrinho(id_utilizador, id_produto):
+        """
+        Retorna o produto adicionado ao carrinho pelo utilizador.
+        """
+        return  UtilizadorDAO.remover_p_do_carrinho(id_utilizador=id_utilizador, id_produto=id_produto)

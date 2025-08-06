@@ -91,7 +91,7 @@ def login_utilizadores():
         response.set_cookie(
             'cookie_sessao',
             token,
-            max_age=3600,  # 1 hora
+            max_age=604800,  # 1 hora
             path='/',
             secure=False, # Altere para True em produção (HTTPS)
         )
@@ -112,6 +112,88 @@ def listar_utilizadores():
     return jsonify([
         {"id": u.id, "nome": u.nome, "email": u.email, "grupo": u.grupo} for u in utilizadores
     ])
+
+
+# Rota para listar carrinho do utilizador
+@utilizadores.route("/utilizadores/carrinho", methods=["GET"])
+def listar_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    utilizadores = UtilizadorController.obter(id)
+    print(decoded_token)
+    return jsonify([
+        {"produto": u.produto.nome, "id produto": u.id_produto, "quantidade": u.quantidade} for u in utilizadores.carrinho
+    ])
+
+# Adicionar item ao carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["post"])
+def adicionar_ao_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+    quantidade = dados.get("quantidade")
+
+    carrinho = UtilizadorController.adicionar_no_carrinho(id, produto, quantidade)
+
+    return jsonify([
+        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
+    ])
+
+
+
+# Atualizar carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["put"])
+def atualizar_o_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+    quantidade = dados.get("quantidade")
+
+    carrinho = UtilizadorController.atualizar_carrinho(id, produto, quantidade)
+    return jsonify([
+        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
+    ])
+
+# Deletar item do carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["delete"])
+def deletar_do_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+
+    carrinho = UtilizadorController.remover_do_carrinho(id, produto)
+
+    return jsonify([
+        {"id do produto deletado": produto, "deletado": carrinho} 
+    ])
+
 
 # Rota para obter um único utilizador por ID
 @utilizadores.route("/utilizadores/id/<int:id_utilizador>", methods=["GET"])

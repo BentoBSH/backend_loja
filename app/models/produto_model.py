@@ -8,18 +8,20 @@ class Produto(db.Model):
     # Nome da tabela na base de dados
     __tablename__ = 'produto'
 
-    # Colunas da tabela
-    id = db.Column(db.Integer, primary_key=True)             # Chave primária
-    nome = db.Column(db.String(100), nullable=False)         # Nome obrigatório
-    preco = db.Column(db.Integer, nullable=False)        # preco obrigatório
-    estoque = db.Column(db.Integer, nullable=False)        # estoques obrigatório
-    capa = db.Column(db.String, nullable=False)         #link da capa 
-    fotos = db.Column(db.String, nullable=True)         #link da capa 
-    descricao = db.Column(db.String, nullable=True)        # descrição
-    categoria = db.Column(db.String, nullable=False)        # categoria
-    detalhes = db.Column(db.String, nullable=True)        # detalhes
-    comentarios = db.Column(db.String, nullable=True)        # comentários
-    rate = db.Column(db.Integer, nullable=True)        # rate 
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    preco = db.Column(db.Integer, nullable=False)
+    capa = db.Column(db.String(300), nullable=False)
+    fotos = db.Column(db.String(800))
+    estoque = db.Column(db.Integer, nullable=False)
+    categoria = db.Column(db.String(800), nullable=False)
+    rate = db.Column(db.Integer)
+    descricao = db.Column(db.String(1000))
+    detalhes = db.Column(db.String(2000))
+    comentarios = db.Column(db.String(4000))
+
+    # Relacionamento com o carrinho
+    carrinho = db.relationship('Carrinho', back_populates='produto', cascade="all, delete", lazy=True)
 
     # Construtor da classe (opcional, útil para criação manual de objetos)
     def __init__(self, nome, preco, capa, estoque, fotos, descricao, detalhes, categoria, comentarios, rate ):
