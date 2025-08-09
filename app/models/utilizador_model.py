@@ -3,6 +3,8 @@
 # Importa o ORM SQLAlchemy já configurado
 from app import db
 from sqlalchemy.orm import relationship
+from app.models.historico_model import Historico
+
 
 # Define a classe Utilizador como modelo ORM
 class Utilizador(db.Model):
@@ -15,6 +17,8 @@ class Utilizador(db.Model):
     email = db.Column(db.String(100), nullable=False)        # Email obrigatório
     palavra_passe = db.Column(db.String(200), nullable=False)        # Password obrigatório
     carrinho = db.relationship('Carrinho', back_populates='utilizador', cascade="all, delete", lazy=True)
+    endereco = db.relationship('Endereco', back_populates='utilizador', cascade="all, delete", lazy=True)
+    historico = db.relationship('Historico', back_populates='utilizador', cascade="all, delete", lazy=True)
     grupo = db.Column(db.Integer, nullable=False)        # Grupo obrigatório
 
     # Construtor da classe (opcional, útil para criação manual de objetos)

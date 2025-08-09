@@ -2,6 +2,7 @@
 
 # Importa o modelo ORM
 from app.models.utilizador_model import Utilizador
+from app.models.endereco_model import Endereco
 from app.models.carrinho_model import Carrinho
 from app import db
 
@@ -109,3 +110,40 @@ class UtilizadorDAO:
             db.session.commit()
             return True
         return False
+    
+    @staticmethod
+    def obter_endereco(id):
+        """
+        Devolve um utilizador com base no ID.
+        """
+        endereco = Endereco.query.filter_by(id_utilizador=id).first()
+        if endereco:
+            return endereco
+        return 
+
+    @staticmethod
+    def atualizar_endereco(id, email, telefone, municipio, detalhes_rua):
+        """
+        Atualiza um utilizador existente.
+        """
+        novo_endereco = Endereco.query.get(id)
+
+        if novo_endereco:
+            nome = novo_endereco.utilizadores.nome
+            novo_endereco.id_utilizador = id
+            novo_endereco.email = email
+            novo_endereco.telefone = telefone
+            novo_endereco.municipio = municipio
+            novo_endereco.detalhes_rua = detalhes_rua
+            db.session.add(novo_endereco)
+            db.session.commit()
+            novo_endereco.nome = nome
+            return novo_endereco
+        else:
+            utilizador = Utilizador.query.get(id)
+            endereco = Endereco(id, email, telefone, municipio, detalhes_rua)
+            db.session.add(endereco)
+            db.session.commit()
+            endereco.nome = utilizador.nome
+            return endereco
+    

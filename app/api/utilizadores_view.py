@@ -203,7 +203,7 @@ def obter_utilizador(id_utilizador):
     
     uDB = UtilizadorController.obter(id_utilizador)
     if uDB:
-        u= uDB[0]
+        u= uDB
         return jsonify({"id": u.id, "nome": u.nome, "grupo": u.grupo})
     return jsonify({"erro": "Utilizador não encontrado"}), 404
 
@@ -272,3 +272,48 @@ def apagar_utilizador(id_utilizador):
     if sucesso:
         return jsonify({"mensagem": "Utilizador apagado com sucesso"})
     return jsonify({"erro": "Utilizador não encontrado"}), 404 
+
+
+
+# Rota para obter o endereço do utilizador
+@utilizadores.route("/utilizadores/endereco", methods=["GET"])
+def obter_endereco():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    endereco = UtilizadorController.obter_endereco(id)
+    if endereco:
+        return jsonify([
+        {"nome": endereco.nome, "email": endereco.email, "telefone": endereco.telefone, "municipio": endereco.municipio,"detalhes_rua": endereco.detalhes_rua} 
+    ])
+    return jsonify([
+        {"erro": "não foi encontrado qualquer registro de endereço"} 
+    ]), 404
+
+# Rota para listar todos os utilizadores
+@utilizadores.route("/utilizadores/endereco", methods=["PUT"])
+def atualizar_endereco():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    email = dados.get("email")
+    telefone = dados.get("telefone")
+    municipio = dados.get("municipio")
+    detalhes_rua = dados.get("detalhes_rua")
+
+    endereco = UtilizadorController.atualizar_endereco(id, email, telefone, municipio, detalhes_rua)
+
+    return jsonify([
+        {"nome": endereco.nome, "email": endereco.email, "telefone": endereco.telefone, "municipio": endereco.municipio,"detalhes_rua": endereco.detalhes_rua} 
+    ])

@@ -87,3 +87,24 @@ class UtilizadorController:
         Retorna o produto adicionado ao carrinho pelo utilizador.
         """
         return  UtilizadorDAO.remover_p_do_carrinho(id_utilizador=id_utilizador, id_produto=id_produto)
+    
+    @staticmethod
+    def obter_endereco(id):
+        """
+        Retorna o endereço do utilizador.
+        """
+        endereco = UtilizadorDAO.obter_endereco(id)
+        if endereco:
+            nome = endereco.utilizador.nome
+            endereco.nome = nome
+            return  endereco
+        return
+
+
+    @staticmethod
+    def atualizar_endereco(id, email, telefone, municipio, detalhes_rua):
+        """
+        Retorna o endereço atualizado.
+        """
+        return  UtilizadorDAO.atualizar_endereco(id, email, telefone, municipio, detalhes_rua)
+
