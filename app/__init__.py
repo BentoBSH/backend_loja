@@ -25,16 +25,19 @@ def criar_app():
 
     with app.app_context():
         # Registo dos blueprints
-        from app.api.utilizadores_view import utilizadores
-        from app.api.produto_view import produtos
+        from app.api.utilizadores_api import utilizadores
+        from app.api.produto_api import produtos
         from app.web.web_view import web
-        from app.api.email_view import webmail
+        from app.api.email_api import webmail
+        from app.services.stripe import stripeBlueprint
 
 
         app.register_blueprint(utilizadores)
         app.register_blueprint(web)
         app.register_blueprint(produtos)
         app.register_blueprint(webmail)
+        app.register_blueprint(stripeBlueprint)
+
 
 
         # Rota para servir o ficheiro swagger.yaml a partir da pasta /docs

@@ -6,7 +6,7 @@ from config import Config  # Garante que config.py está a ser usado
 import jwt
 from datetime import datetime, timedelta, timezone
 from argon2 import PasswordHasher
-from app.api.email_view import enviar_email_novo_usuario
+from app.api.email_api import enviar_email_novo_usuario
 
 ph = PasswordHasher()
 
@@ -114,87 +114,6 @@ def listar_utilizadores():
     ])
 
 
-# Rota para listar carrinho do utilizador
-@utilizadores.route("/utilizadores/carrinho", methods=["GET"])
-def listar_carrinho():
-
-    cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
-    utilizadores = UtilizadorController.obter(id)
-    print(decoded_token)
-    return jsonify([
-        {"produto": u.produto.nome, "id produto": u.id_produto, "quantidade": u.quantidade} for u in utilizadores.carrinho
-    ])
-
-# Adicionar item ao carrinho
-@utilizadores.route("/utilizadores/carrinho", methods=["post"])
-def adicionar_ao_carrinho():
-
-    cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
-    dados = request.get_json()
-    produto = dados.get("id_produto")
-    quantidade = dados.get("quantidade")
-
-    carrinho = UtilizadorController.adicionar_no_carrinho(id, produto, quantidade)
-
-    return jsonify([
-        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
-    ])
-
-
-
-# Atualizar carrinho
-@utilizadores.route("/utilizadores/carrinho", methods=["put"])
-def atualizar_o_carrinho():
-
-    cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
-    dados = request.get_json()
-    produto = dados.get("id_produto")
-    quantidade = dados.get("quantidade")
-
-    carrinho = UtilizadorController.atualizar_carrinho(id, produto, quantidade)
-    return jsonify([
-        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
-    ])
-
-# Deletar item do carrinho
-@utilizadores.route("/utilizadores/carrinho", methods=["delete"])
-def deletar_do_carrinho():
-
-    cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
-    dados = request.get_json()
-    produto = dados.get("id_produto")
-
-    carrinho = UtilizadorController.remover_do_carrinho(id, produto)
-
-    return jsonify([
-        {"id do produto deletado": produto, "deletado": carrinho} 
-    ])
-
-
 # Rota para obter um único utilizador por ID
 @utilizadores.route("/utilizadores/id/<int:id_utilizador>", methods=["GET"])
 def obter_utilizador(id_utilizador):
@@ -295,7 +214,7 @@ def obter_endereco():
         {"erro": "não foi encontrado qualquer registro de endereço"} 
     ]), 404
 
-# Rota para listar todos os utilizadores
+# Rota para atualizar endereço
 @utilizadores.route("/utilizadores/endereco", methods=["PUT"])
 def atualizar_endereco():
 
@@ -316,4 +235,85 @@ def atualizar_endereco():
 
     return jsonify([
         {"nome": endereco.nome, "email": endereco.email, "telefone": endereco.telefone, "municipio": endereco.municipio,"detalhes_rua": endereco.detalhes_rua} 
+    ])
+
+
+# Rota para listar carrinho do utilizador
+@utilizadores.route("/utilizadores/carrinho", methods=["GET"])
+def listar_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    utilizadores = UtilizadorController.obter(id)
+    print(decoded_token)
+    return jsonify([
+        {"produto": u.produto.nome, "id produto": u.id_produto, "quantidade": u.quantidade} for u in utilizadores.carrinho
+    ])
+
+# Adicionar item ao carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["post"])
+def adicionar_ao_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+    quantidade = dados.get("quantidade")
+
+    carrinho = UtilizadorController.adicionar_no_carrinho(id, produto, quantidade)
+
+    return jsonify([
+        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
+    ])
+
+
+
+# Atualizar carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["put"])
+def atualizar_o_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+    quantidade = dados.get("quantidade")
+
+    carrinho = UtilizadorController.atualizar_carrinho(id, produto, quantidade)
+    return jsonify([
+        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
+    ])
+
+# Deletar item do carrinho
+@utilizadores.route("/utilizadores/carrinho", methods=["delete"])
+def deletar_do_carrinho():
+
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    produto = dados.get("id_produto")
+
+    carrinho = UtilizadorController.remover_do_carrinho(id, produto)
+
+    return jsonify([
+        {"id do produto deletado": produto, "deletado": carrinho} 
     ])
