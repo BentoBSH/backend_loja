@@ -2,7 +2,7 @@
 """
 Python 3.6 or newer required.
 """
-from flask import Flask, Blueprint, request, jsonify, make_response, render_template
+from flask import Flask, Blueprint, request, jsonify
 import json
 import os
 import stripe
