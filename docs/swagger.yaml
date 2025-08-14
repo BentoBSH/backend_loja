@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API para gestão de produtos
 servers:
-  - url: http://localhost:5000
+  - url: https://backend-loja-lhjp.onrender.com
     description: Servidor backend
 paths:
   /produtos:
