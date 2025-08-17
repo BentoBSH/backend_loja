@@ -3,6 +3,14 @@ info:
   title: API de produtos
   version: 1.0.0
   description: API para gestão de produtos
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+security:
+  - ApiKeyAuth: []
 servers:
   - url: https://backend-loja-lhjp.onrender.com
     description: Servidor backend
