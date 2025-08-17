@@ -22,8 +22,6 @@ class Produto(db.Model):
 
     # Relacionamento com o carrinho
     carrinho = db.relationship('Carrinho', back_populates='produto', cascade="all, delete", lazy=True)
-    # Relacionamento com o historico
-    historico = db.relationship('Historico', back_populates='produto', cascade="all, delete", lazy=True)
 
 
     # Construtor da classe (opcional, útil para criação manual de objetos)
