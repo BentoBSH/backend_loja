@@ -7,6 +7,7 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from argon2 import PasswordHasher
 from app.api.email_api import enviar_email_novo_usuario
+from flask_cors import cross_origin 
 
 ph = PasswordHasher()
 
@@ -22,8 +23,9 @@ def verificar_api_key_super():
     chave = request.headers.get("super-api-key")
     return chave == Config.API_KEY
 
-# Rota para listar todos os utilizadores
+# Rota para logar o utilizador
 @utilizadores.route("/utilizadores/login", methods=["POST"])
+@cross_origin(supports_credentials=True) # Adicione esta linha
 def login_utilizadores():
     cookie_sessao = request.cookies.get('cookie_sessao')
     email = request.json.get('email', None)
@@ -39,7 +41,7 @@ def login_utilizadores():
             
 
             # Cria uma resposta Flask (necessário para adicionar cookies)
-            response = make_response(jsonify({'message': 'Acesso concedido', 'user_info': decoded_token}))
+            response = make_response(jsonify({'message': 'Bem vindo de volta', 'user_info': encoded_token}))
             
             response.set_cookie(
                 'cookie_sessao',
@@ -54,7 +56,7 @@ def login_utilizadores():
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'Token expirado'}), 401
         except jwt.InvalidTokenError:
-            return jsonify({'message': 'Token inválido'}), 401
+            return jsonify({'message': 'Token invalido'}), 401
         except IndexError:
             return jsonify({'message': 'Formato de token inválido.', 'cookie': cookie_sessao}), 401
 
@@ -64,7 +66,7 @@ def login_utilizadores():
     # Verificação de credenciais
     
     uDB = UtilizadorController.obter_via_email(email)
-    u = uDB[0]
+    u = uDB
     if not u:
         return jsonify({"erro": 'Credenciais inválidas'}), 401
  
@@ -86,7 +88,7 @@ def login_utilizadores():
         # envia um email ao usuário 
 
         # Cria uma resposta Flask (necessário para adicionar cookies)
-        response = make_response(jsonify({'message': 'Login bem-sucedido'}))
+        response = make_response(jsonify({'message': 'Acesso concedido', 'user_info': token}))
         
         response.set_cookie(
             'cookie_sessao',
@@ -316,4 +318,29 @@ def deletar_do_carrinho():
 
     return jsonify([
         {"id do produto deletado": produto, "deletado": carrinho} 
+    ])
+
+
+# Adicionar historico de compra
+@utilizadores.route("/utilizadores/historico", methods=["post"])
+def adicionar_ao_historico():
+    print(request.cookies)
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    dados = request.get_json()
+    #id = dados.get("id")
+    id_produtos = dados.get("id_produtos")
+    quantidades = dados.get("quantidades")
+    id_compra = dados.get("id_compra")
+
+
+    historico = UtilizadorController.adicionar_ao_historico(id, id_produtos, quantidades, id_compra)
+
+    return jsonify([
+        {"id dos produtos adicionados ao historico": historico.id_produtos} 
     ])

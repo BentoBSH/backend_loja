@@ -108,3 +108,10 @@ class UtilizadorController:
         """
         return  UtilizadorDAO.atualizar_endereco(id, email, telefone, municipio, detalhes_rua)
 
+
+    @staticmethod
+    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra):
+        """
+        Retorna os produtos adicionados ao carrinho pelo utilizador.
+        """
+        return  UtilizadorDAO.adicionar_ao_historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra)

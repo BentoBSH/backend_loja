@@ -4,6 +4,7 @@
 from app.models.utilizador_model import Utilizador
 from app.models.endereco_model import Endereco
 from app.models.carrinho_model import Carrinho
+from app.models.historico_model import Historico
 from app import db
 
 # Classe DAO com métodos de acesso à base de dados
@@ -28,7 +29,7 @@ class UtilizadorDAO:
         """
         Devolve um utilizador com base no ID.
         """
-        return Utilizador.query.filter_by(email=email_utilizador).all()
+        return Utilizador.query.filter_by(email=email_utilizador).first()
 
     @staticmethod
     def adicionar(nome, email, grupo, palavra_passe):
@@ -147,3 +148,14 @@ class UtilizadorDAO:
             endereco.nome = utilizador.nome
             return endereco
     
+    
+    @staticmethod
+    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra):
+        """
+        Adiciona produto ao historico de um utilizador.
+        """
+
+        item_historico = Historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra)
+        db.session.add(item_historico)
+        db.session.commit()
+        return item_historico
