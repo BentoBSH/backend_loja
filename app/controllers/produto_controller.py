@@ -52,6 +52,13 @@ class ProdutoController:
         return ProdutoDAO.obter_por_id(id_produto)
 
     @staticmethod
+    def obter_por_lista(lista_id_produtos):
+        """
+        Retorna uma lista de produtos com base nos IDs.
+        """
+        return ProdutoDAO.obter_por_lista_id(lista_id_produtos)
+
+    @staticmethod
     def criar(nome, preco, capa, fotos, estoque, categoria, rate, descricao, detalhes, comentarios):
         """
         Cria um novo produto.
