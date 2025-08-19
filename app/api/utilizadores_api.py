@@ -25,7 +25,7 @@ def verificar_api_key_super():
 
 # Rota para logar o utilizador
 @utilizadores.route("/utilizadores/login", methods=["POST"])
-@cross_origin(supports_credentials=True) # Adicione esta linha
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def login_utilizadores():
     cookie_sessao = request.cookies.get('cookie_sessao')
     email = request.json.get('email', None)
@@ -198,6 +198,7 @@ def apagar_utilizador(id_utilizador):
 
 # Rota para obter o endereço do utilizador
 @utilizadores.route("/utilizadores/endereco", methods=["GET"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def obter_endereco():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -218,6 +219,7 @@ def obter_endereco():
 
 # Rota para atualizar endereço
 @utilizadores.route("/utilizadores/endereco", methods=["PUT"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def atualizar_endereco():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -242,6 +244,7 @@ def atualizar_endereco():
 
 # Rota para listar carrinho do utilizador
 @utilizadores.route("/utilizadores/carrinho", methods=["GET"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def listar_carrinho():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -259,6 +262,7 @@ def listar_carrinho():
 
 # Adicionar item ao carrinho
 @utilizadores.route("/utilizadores/carrinho", methods=["post"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def adicionar_ao_carrinho():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -282,6 +286,7 @@ def adicionar_ao_carrinho():
 
 # Atualizar carrinho
 @utilizadores.route("/utilizadores/carrinho", methods=["put"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def atualizar_o_carrinho():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -302,6 +307,7 @@ def atualizar_o_carrinho():
 
 # Deletar item do carrinho
 @utilizadores.route("/utilizadores/carrinho", methods=["delete"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def deletar_do_carrinho():
 
     cookie_sessao = request.cookies.get('cookie_sessao')
@@ -323,6 +329,7 @@ def deletar_do_carrinho():
 
 # Adicionar historico de compra
 @utilizadores.route("/utilizadores/historico", methods=["post"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def adicionar_ao_historico():
     print(request.cookies)
     cookie_sessao = request.cookies.get('cookie_sessao')
