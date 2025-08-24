@@ -16,7 +16,8 @@ stripeBlueprint = Blueprint("stripeBlueprint", __name__)
 
 
 def calculate_order_amount(lista_IDs_quantidade):
-  
+     #teste
+    '''
     # cria duas listas: uma dos ids e outras das quantidades 
     lista_IDs = [p['id'] for p in lista_IDs_quantidade]
     lista_quantidades = [p['quantidade'] for p in lista_IDs_quantidade]
@@ -33,8 +34,9 @@ def calculate_order_amount(lista_IDs_quantidade):
     # obtem o total geral
     total_geral = sum(total_por_item)
     #print(total_por_item)
-
-    return total_por_item
+       '''
+   # return total_por_item 
+    return 1400
 
 
 @stripeBlueprint.route('/create-payment-intent', methods=['POST'])
