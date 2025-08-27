@@ -159,3 +159,14 @@ class UtilizadorDAO:
         db.session.add(item_historico)
         db.session.commit()
         return item_historico
+
+
+    @staticmethod
+    def obter_historico(id_utilizador):
+        """
+        obter historico de compras de um utilizador.
+        """
+        historico = Historico.query.filter_by(id_utilizador=id_utilizador).first()
+        if historico:
+            return historico
+        return 

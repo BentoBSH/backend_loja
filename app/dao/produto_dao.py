@@ -60,7 +60,7 @@ class ProdutoDAO:
         """
         Devolve um produto com base no ID.
         """
-        return [Produto.query.get(id_produto) for id_produto in lista_ids ] 
+        return [Produto.query.get(id_produto) for id_produto in lista_ids] 
 
     @staticmethod
     def adicionar(nome, preco, capa, fotos, estoque, categoria, rate, descricao, detalhes, comentarios):

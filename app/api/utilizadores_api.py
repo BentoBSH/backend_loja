@@ -331,7 +331,7 @@ def deletar_do_carrinho():
 @utilizadores.route("/utilizadores/historico", methods=["post"])
 @cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
 def adicionar_ao_historico():
-    print(request.cookies)
+    #print(request.cookies)
     cookie_sessao = request.cookies.get('cookie_sessao')
     if not cookie_sessao:
         return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
@@ -350,4 +350,30 @@ def adicionar_ao_historico():
 
     return jsonify([
         {"id dos produtos adicionados ao historico": historico.id_produtos} 
+    ])
+
+
+
+
+# Obter historico de compra
+@utilizadores.route("/utilizadores/historico", methods=["get"])
+@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
+def obter_historico():
+    cookie_sessao = request.cookies.get('cookie_sessao')
+    if not cookie_sessao:
+        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
+
+    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+    id = decoded_token["user_id"]
+
+    historico = UtilizadorController.obter_historico(id)
+    print(historico)
+    if historico:
+        response = make_response(jsonify([
+        {"product_id": str(historico.id)}
+    ]), 200) 
+        return response
+    
+    return jsonify([
+        {"historico de compras": "sem histórico de copras"} 
     ])

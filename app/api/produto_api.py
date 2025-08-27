@@ -74,6 +74,20 @@ def obter_produto(id_produto):
         return jsonify({"id": p.id, "nome": p.nome, "preco": p.preco})
     return jsonify({"erro": "Produto não encontrado"}), 404
 
+# Rota para obter varios produtos por ID
+@produtos.route("/produtos/id/", methods=["POST"])
+def obter_produtos():
+    dados = request.get_json()
+    lista_id_produtos = dados.get("lista_ids")
+    produtos = ProdutoController.obter_por_lista(lista_id_produtos)
+    if produtos:
+        response = make_response(jsonify([
+            {"product_id": str(p.id), "nome": p.nome, "preco": p.preco, "capa": p.capa, "fotos": p.fotos, "estoque": p.estoque, "categoria": p.categoria, "rate": p.rate, "descricao": p.descricao, "detalhes": p.detalhes, "comentarios": p.comentarios} for p in produtos
+        ]), 200) 
+        return response
+    return jsonify({"erro": "Produtos não encontrados"}), 404
+
+
 # Rota para criar um novo Produto  
 @produtos.route("/produtos", methods=["POST"])
 def criar_produto():

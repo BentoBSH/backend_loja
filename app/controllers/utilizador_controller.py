@@ -115,3 +115,12 @@ class UtilizadorController:
         Retorna os produtos adicionados ao carrinho pelo utilizador.
         """
         return  UtilizadorDAO.adicionar_ao_historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra)
+
+
+    @staticmethod
+    def obter_historico(id_utilizador):
+        """
+        Retorna os produtos comprados pelo utilizador.
+        """
+        return  UtilizadorDAO.obter_historico(id_utilizador=id_utilizador)
+        
