@@ -344,9 +344,11 @@ def adicionar_ao_historico():
     id_produtos = dados.get("id_produtos")
     quantidades = dados.get("quantidades")
     id_compra = dados.get("id_compra")
+    total = dados.get("total")
 
 
-    historico = UtilizadorController.adicionar_ao_historico(id, id_produtos, quantidades, id_compra)
+
+    historico = UtilizadorController.adicionar_ao_historico(id, id_produtos, quantidades, id_compra, total)
 
     return jsonify([
         {"id dos produtos adicionados ao historico": historico.id_produtos} 
@@ -366,12 +368,12 @@ def obter_historico():
     decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
     id = decoded_token["user_id"]
 
-    historico = UtilizadorController.obter_historico(id)
-    print(historico)
-    if historico:
+    resultado_historico = UtilizadorController.obter_historico(id)
+    print(resultado_historico)
+    if resultado_historico:
         response = make_response(jsonify([
-        {"product_id": str(historico.id)}
-    ]), 200) 
+        {"id_produtos": str(historico.id_produtos), "quantidades": str(historico.quantidades), "data_compra": str(historico.data_compra), "total": str(historico.total), "id_compra": str(historico.id_compra)}
+     for historico in resultado_historico]), 200) 
         return response
     
     return jsonify([

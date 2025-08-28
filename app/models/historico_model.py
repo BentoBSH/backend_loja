@@ -16,6 +16,8 @@ class Historico(db.Model):
     quantidades = db.Column(db.String(255), nullable=False)
     data_compra = db.Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), nullable=False)
     id_compra = db.Column(db.String(255), nullable=False)
+    total = db.Column(db.Integer, nullable=False)
+
 
 
     # Relacionamentos
@@ -33,5 +35,6 @@ class Historico(db.Model):
             "id_produtos": self.id_produtos,
             "quantidades": self.quantidades,
             "data_compra": self.data_compra.isoformat() if self.data_compra else None, # Formata para string ISO 8601
-            "id_compra": self.id_compra
+            "id_compra": self.id_compra,
+            "total": self.total
         }
