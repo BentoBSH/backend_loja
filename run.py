@@ -4,8 +4,8 @@
 from app import criar_app
 
 # Cria a app usando a função definida em __init__.py
-app = criar_app()
+app, socketio = criar_app()
 
 # Executa a aplicação
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=4000) 
+    socketio.run(app, debug=False, host="0.0.0.0", port=4000)
