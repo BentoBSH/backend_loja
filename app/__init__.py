@@ -23,6 +23,10 @@ def criar_app():
     # Inicializa a ligação à base de dados
     db.init_app(app)
 
+    # importa socketio
+    from app.sockets import socketio
+    socketio.init_app(app)
+
     with app.app_context():
         # Registo dos blueprints
         from app.api.utilizadores_api import utilizadores
@@ -30,13 +34,14 @@ def criar_app():
         from app.web.web_view import web
         from app.api.email_api import webmail
         from app.services.stripe import stripeBlueprint
-
+        from app.routes.chat_routes import chat_bp
 
         app.register_blueprint(utilizadores)
         app.register_blueprint(web)
         app.register_blueprint(produtos)
         app.register_blueprint(webmail)
         app.register_blueprint(stripeBlueprint)
+        app.register_blueprint(chat_bp)
 
 
 
@@ -58,4 +63,4 @@ def criar_app():
         CORS(app)
         db.create_all()
 
-    return app
+    return app, socketio

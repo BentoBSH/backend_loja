@@ -127,10 +127,10 @@ class UtilizadorDAO:
         """
         Atualiza um utilizador existente.
         """
-        novo_endereco = Endereco.query.get(id)
+        novo_endereco = Endereco.query.filter_by(id_utilizador=id).first()
 
         if novo_endereco:
-            nome = novo_endereco.utilizadores.nome
+            nome = novo_endereco.utilizador.nome
             novo_endereco.id_utilizador = id
             novo_endereco.email = email
             novo_endereco.telefone = telefone

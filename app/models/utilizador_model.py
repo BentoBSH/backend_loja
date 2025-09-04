@@ -20,6 +20,7 @@ class Utilizador(db.Model):
     endereco = db.relationship('Endereco', back_populates='utilizador', cascade="all, delete", lazy=True)
     historico = db.relationship('Historico', back_populates='utilizador', cascade="all, delete", lazy=True)
     grupo = db.Column(db.Integer, nullable=False)        # Grupo obrigatório
+    mensagens = db.relationship("Mensagem", back_populates="utilizador", cascade="all, delete-orphan")
 
     # Construtor da classe (opcional, útil para criação manual de objetos)
     def __init__(self, nome, email, grupo, palavra_passe, carrinho):
