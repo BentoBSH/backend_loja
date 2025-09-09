@@ -25,19 +25,26 @@ class UtilizadorController:
         return UtilizadorDAO.obter_por_id(id_utilizador)
 
     @staticmethod
+    def obter_carrinho(id_utilizador):
+        """
+        Retorna o carrinho com base no ID.
+        """
+        return UtilizadorDAO.obter_carrinho(id_utilizador)
+    
+    @staticmethod
     def adicionar_no_carrinho(id_utilizador, id_produto, quantidade):
         """
-        Retorna o produto adicionado ao carrinho pelo utilizador.
+        Retorna o carrinho.
         """
         return  UtilizadorDAO.adicionar_ao_carrinho(id_utilizador=id_utilizador, id_produto=id_produto, quantidade=quantidade)
 
     @staticmethod
-    def atualizar_carrinho(id_utilizador, id_produto, nova_quantidade):
+    def remover_do_carrinho(id_utilizador):
         """
-        Retorna o produto adicionado ao carrinho pelo utilizador.
+        Retorna true caso o carrinho for deletado false caso exita algo no carrinho.
         """
-        return  UtilizadorDAO.atualizar_carrinho(id_utilizador=id_utilizador, id_produto=id_produto, nova_quantidade=nova_quantidade)
-
+        return  UtilizadorDAO.remover_carrinho(id_utilizador=id_utilizador)
+    
     @staticmethod
     def obter_via_email(email_utilizador):
         """
@@ -80,13 +87,6 @@ class UtilizadorController:
         Elimina um utilizador da base de dados.
         """
         return UtilizadorDAO.apagar(id_utilizador)
-    
-    @staticmethod
-    def remover_do_carrinho(id_utilizador, id_produto):
-        """
-        Retorna o produto adicionado ao carrinho pelo utilizador.
-        """
-        return  UtilizadorDAO.remover_p_do_carrinho(id_utilizador=id_utilizador, id_produto=id_produto)
     
     @staticmethod
     def obter_endereco(id):

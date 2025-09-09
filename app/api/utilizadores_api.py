@@ -254,11 +254,11 @@ def listar_carrinho():
     decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
     id = decoded_token["user_id"]
 
-    utilizadores = UtilizadorController.obter(id)
+    carrinho = UtilizadorController.obter_carrinho(id)
     print(decoded_token)
-    return jsonify([
-        {"produto": u.produto.nome, "id produto": u.id_produto, "quantidade": u.quantidade} for u in utilizadores.carrinho
-    ])
+    return jsonify(
+        {"id_produtos": carrinho.id_produto, "quantidades": carrinho.quantidade} 
+    )
 
 # Adicionar item ao carrinho
 @utilizadores.route("/utilizadores/carrinho", methods=["post"])
@@ -273,37 +273,15 @@ def adicionar_ao_carrinho():
     id = decoded_token["user_id"]
 
     dados = request.get_json()
-    produto = dados.get("id_produto")
-    quantidade = dados.get("quantidade")
+    produto = dados.get("id_produtos")
+    quantidade = dados.get("quantidades")
 
     carrinho = UtilizadorController.adicionar_no_carrinho(id, produto, quantidade)
 
     return jsonify([
-        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
+        {"produtos": carrinho.id_produto, "quantidades": carrinho.quantidade} 
     ])
 
-
-
-# Atualizar carrinho
-@utilizadores.route("/utilizadores/carrinho", methods=["put"])
-@cross_origin(supports_credentials=True) # aceitar credeciais, cuidado credenciais podem ser imbutidas na requisição 
-def atualizar_o_carrinho():
-
-    cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
-    dados = request.get_json()
-    produto = dados.get("id_produto")
-    quantidade = dados.get("quantidade")
-
-    carrinho = UtilizadorController.atualizar_carrinho(id, produto, quantidade)
-    return jsonify([
-        {"id do produto adicionado": carrinho.id_produto, "quantidade": carrinho.quantidade} 
-    ])
 
 # Deletar item do carrinho
 @utilizadores.route("/utilizadores/carrinho", methods=["delete"])
@@ -318,12 +296,11 @@ def deletar_do_carrinho():
     id = decoded_token["user_id"]
 
     dados = request.get_json()
-    produto = dados.get("id_produto")
 
-    carrinho = UtilizadorController.remover_do_carrinho(id, produto)
+    carrinho = UtilizadorController.remover_do_carrinho(id)
 
     return jsonify([
-        {"id do produto deletado": produto, "deletado": carrinho} 
+        {"carrinho com itens": not carrinho, "deletado": carrinho} 
     ])
 
 

@@ -21,7 +21,7 @@ class Produto(db.Model):
     comentarios = db.Column(db.String(4000))
 
     # Relacionamento com o carrinho
-    carrinho = db.relationship('Carrinho', back_populates='produto', cascade="all, delete", lazy=True)
+    #carrinho = db.relationship('Carrinho', back_populates='produto', cascade="all, delete", lazy=True)
 
 
     # Construtor da classe (opcional, útil para criação manual de objetos)

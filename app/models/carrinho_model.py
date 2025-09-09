@@ -12,12 +12,12 @@ class Carrinho(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     id_utilizador = db.Column(db.Integer, db.ForeignKey('utilizador.id'), nullable=False)
-    id_produto = db.Column(db.Integer, db.ForeignKey('produto.id'), nullable=False)
-    quantidade = db.Column(db.Integer, nullable=False)
+    id_produto = db.Column(db.String, nullable=True)
+    quantidade = db.Column(db.String, nullable=True)
 
     # Relacionamentos
     utilizador = db.relationship('Utilizador', back_populates='carrinho')
-    produto = db.relationship('Produto', back_populates='carrinho')
+    #produto = db.relationship('Produto', back_populates='carrinho')
 
     '''
         # Construtor da classe (opcional, útil para criação manual de objetos)

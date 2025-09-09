@@ -41,6 +41,13 @@ class UtilizadorDAO:
         db.session.commit()
         return novo
     
+    @staticmethod
+    def obter_carrinho(id_utilizador):
+        """
+        Devolve o carrinho do utilizador com base no ID.
+        """
+        return Carrinho.query.filter_by(id_utilizador=id_utilizador).first()
+    
     
     @staticmethod
     def adicionar_ao_carrinho(id_utilizador, id_produto, quantidade):
@@ -48,9 +55,10 @@ class UtilizadorDAO:
         Adiciona produto ao carrinho de um utilizador.
         """
         # verifica se o item já existe antes de ser adicionado e caso exista incrementa a quantidade
-        item_na_db = Carrinho.query.filter_by(id_utilizador=id_utilizador, id_produto=id_produto).first()
+        item_na_db = Carrinho.query.filter_by(id_utilizador=id_utilizador).first()
         if item_na_db:
-            item_na_db.quantidade = item_na_db.quantidade + quantidade
+            item_na_db.quantidade = quantidade
+            item_na_db.id_produto = id_produto
             db.session.add(item_na_db)
             db.session.commit()
             return item_na_db
@@ -59,19 +67,19 @@ class UtilizadorDAO:
         db.session.add(item_carrinho)
         db.session.commit()
         return item_carrinho
-
+    
     @staticmethod
-    def atualizar_carrinho(id_utilizador, id_produto, nova_quantidade):
+    def remover_carrinho(id_utilizador):
         """
-        Remove um produto da base de dados.
+        Remove linha vazia da base de dados.
         """
-        item = Carrinho.query.filter_by(id_utilizador=id_utilizador, id_produto=id_produto).first()
+        item = Carrinho.query.filter_by(id_utilizador=id_utilizador).first()
 
-        if item:
-            item.quantidade = nova_quantidade
-            db.session.add(item)
+        if not item.id_produto:
+            db.session.delete(item)
             db.session.commit()
-            return item
+            return True
+        return False
 
     @staticmethod
     def atualizar(id_utilizador, nome, email, grupo, palavra_passe):
@@ -98,19 +106,6 @@ class UtilizadorDAO:
             db.session.delete(utilizador)
             db.session.commit()
             return True
-        
-    @staticmethod
-    def remover_p_do_carrinho(id_utilizador, id_produto):
-        """
-        Remove um produto da base de dados.
-        """
-        item = Carrinho.query.filter_by(id_utilizador=id_utilizador, id_produto=id_produto).first()
-
-        if item:
-            db.session.delete(item)
-            db.session.commit()
-            return True
-        return False
     
     @staticmethod
     def obter_endereco(id):
