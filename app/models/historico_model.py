@@ -17,6 +17,9 @@ class Historico(db.Model):
     data_compra = db.Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), nullable=False)
     id_compra = db.Column(db.String(255), nullable=False)
     total = db.Column(db.Integer, nullable=False)
+    detalhes = db.Column(db.String(255), nullable=True)
+    estado = db.Column(db.String(255), nullable=True)
+
 
 
 
@@ -36,5 +39,7 @@ class Historico(db.Model):
             "quantidades": self.quantidades,
             "data_compra": self.data_compra.isoformat() if self.data_compra else None, # Formata para string ISO 8601
             "id_compra": self.id_compra,
-            "total": self.total
+            "total": self.total,
+            "detalhes": self.detalhes,
+            "estado": self.estado
         }

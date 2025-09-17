@@ -145,12 +145,12 @@ class UtilizadorDAO:
     
     
     @staticmethod
-    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra, total):
+    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra, total, detalhes=None, estado=None):
         """
         Adiciona produto ao historico de um utilizador.
         """
 
-        item_historico = Historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra, total=total)
+        item_historico = Historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra, total=total, detalhes=detalhes, estado=estado)
         db.session.add(item_historico)
         db.session.commit()
         return item_historico

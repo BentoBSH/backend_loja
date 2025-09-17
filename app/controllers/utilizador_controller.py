@@ -110,11 +110,11 @@ class UtilizadorController:
 
 
     @staticmethod
-    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra, total):
+    def adicionar_ao_historico(id_utilizador, id_produtos, quantidades, id_compra, total, detalhes, estado):
         """
         Retorna os produtos adicionados ao carrinho pelo utilizador.
         """
-        return  UtilizadorDAO.adicionar_ao_historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra, total=total)
+        return  UtilizadorDAO.adicionar_ao_historico(id_utilizador=id_utilizador, id_produtos=id_produtos, quantidades=quantidades, id_compra=id_compra, total=total, detalhes=detalhes, estado=estado)
 
 
     @staticmethod

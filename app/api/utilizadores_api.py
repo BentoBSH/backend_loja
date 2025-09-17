@@ -134,9 +134,8 @@ def obter_utilizador_por_email(email_utilizador):
     if not verificar_api_key():
         return jsonify({"erro": "Acesso não autorizado – API Key inválida"}), 401
     
-    uDB = UtilizadorController.obter_via_email(email_utilizador)
-    if uDB:
-        u= uDB[0]
+    u = UtilizadorController.obter_via_email(email_utilizador)
+    if u:
         return jsonify({"id": u.id, "nome": u.nome, "email": u.email, "grupo": u.grupo})
     return jsonify({"erro": "Utilizador não encontrado"}), 404
 
@@ -193,7 +192,6 @@ def apagar_utilizador(id_utilizador):
     if sucesso:
         return jsonify({"mensagem": "Utilizador apagado com sucesso"})
     return jsonify({"erro": "Utilizador não encontrado"}), 404 
-
 
 
 # Rota para obter o endereço do utilizador
@@ -310,28 +308,36 @@ def deletar_do_carrinho():
 def adicionar_ao_historico():
     #print(request.cookies)
     cookie_sessao = request.cookies.get('cookie_sessao')
-    if not cookie_sessao:
-        return jsonify({"erro": "Acesso não autorizado – Não tem sessão ativa"}), 401
-
-    decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
-    id = decoded_token["user_id"]
-
     dados = request.get_json()
-    #id = dados.get("id")
+    email = dados.get("email")
+
+    if not cookie_sessao:
+        palavra_passe = ph.hash('12345678')
+        grupo = 4
+
+        try:
+            novo = UtilizadorController.criar('naoLogado', email, grupo, palavra_passe)
+            id = novo.id
+        except Exception as e:
+            print(e) # futuramente adicionar nos logs do sistema ao invés de imprimir (que não faz sentido)
+            # se der um erro então existe um utilizador com este email, basta pegar o id e colocar no histórico de compras 
+            u = UtilizadorController.obter_via_email(email)
+            if u:
+                id = u.id
+    if cookie_sessao:
+        decoded_token = jwt.decode(cookie_sessao, Config.SECRET_KEY, algorithms=['HS256'])
+        id = decoded_token["user_id"]
+
     id_produtos = dados.get("id_produtos")
     quantidades = dados.get("quantidades")
     id_compra = dados.get("id_compra")
     total = dados.get("total")
 
-
-
-    historico = UtilizadorController.adicionar_ao_historico(id, id_produtos, quantidades, id_compra, total)
+    historico = UtilizadorController.adicionar_ao_historico(id, id_produtos, quantidades, id_compra, total, detalhes=email, estado=None)
 
     return jsonify([
         {"id dos produtos adicionados ao historico": historico.id_produtos} 
     ])
-
-
 
 
 # Obter historico de compra
