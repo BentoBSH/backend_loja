@@ -1,6 +1,5 @@
 Flask
 Flask-SQLAlchemy
-flask_bcrypt
 python-dotenv
 PyMySQL
 flask-swagger-ui
@@ -10,3 +9,4 @@ mysql
 flask-cors
 stripe
 flask_socketio
+#flask_bcrypt
